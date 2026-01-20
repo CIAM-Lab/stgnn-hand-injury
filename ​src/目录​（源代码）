@@ -1,0 +1,18 @@
+import torch
+import torch.nn as nn
+
+class STGNN(nn.Module):
+    """时空图神经网络模型"""
+    def __init__(self, input_dim=18, hidden_dim=64):
+        super().__init__()
+        # 简化的模型结构
+        self.encoder = nn.Linear(input_dim, hidden_dim)
+        self.predictor = nn.Linear(hidden_dim, 1)
+        
+    def forward(self, x):
+        x = self.encoder(x)
+        return self.predictor(x)
+
+if __name__ == "__main__":
+    model = STGNN()
+    print(f"模型参数量: {sum(p.numel() for p in model.parameters()):,}")
