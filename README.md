@@ -18,3 +18,6 @@ Official implementation of STGNN‑HTR for hand trauma risk prediction (PeerJ Co
 ## Citation
 ## Contact
 Chen Ye - 295256318@qq.com
+- Added Zenodo DOI badge for permanent archiving
+- Expanded installation and reproduction steps
+- Updated citation information
