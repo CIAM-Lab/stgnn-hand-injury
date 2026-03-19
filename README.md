@@ -1,4 +1,4 @@
-# STGNN Occupational Hand Injury Prediction
+Official implementation of STGNN‑HTR for hand trauma risk prediction (PeerJ Computer Science 2026)# STGNN Occupational Hand Injury Prediction
 
 ![Python](https://img.shields.io/badge/Python-3.9-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.0-red)
