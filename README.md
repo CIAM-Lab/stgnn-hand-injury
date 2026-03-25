@@ -1,7 +1,6 @@
 # STGNN‑HTR: Spatio-Temporal Graph Neural Network for Hand Trauma Risk Prediction
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19217481.svg)](https://doi.org/10.5281/zenodo.19217481)
 Official implementation of the paper:  
 **"STGNN‑HTR: An Open-Source Spatio-Temporal Graph Neural Network Framework for Hand Trauma Risk Prediction"**  
 Chen Ye, Xiaoqun Qin  
