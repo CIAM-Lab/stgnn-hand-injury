@@ -1,26 +1,45 @@
-# STGNN‑HTR: Spatio-Temporal Graph Neural Network for Hand Trauma Risk Prediction
+# STGNN‑HTR: A reproducible spatio-temporal graph neural network framework for multi-source hand trauma risk prediction
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19217481.svg)](https://doi.org/10.5281/zenodo.19217481)
-Official implementation of the paper:  
-**"STGNN‑HTR: An Open-Source Spatio-Temporal Graph Neural Network Framework for Hand Trauma Risk Prediction"**  
-Chen Ye, Xiaoqun Qin  
-*PeerJ Computer Science* (Under Review), 2026
+## Title
+STGNN‑HTR: A reproducible spatio-temporal graph neural network framework for multi-source hand trauma risk prediction
 
-## 📋 Overview
+## Description
+This repository contains the official implementation of STGNN‑HTR for hand trauma risk prediction across 14 cities in Hunan, China (2011–2023). The framework integrates hybrid graph construction (geographic + economic similarity), graph convolutional networks (GCN) for spatial dependencies, gated recurrent units (GRU) for temporal dynamics, and multi-head attention for adaptive feature fusion.
 
-This repository contains the complete implementation of STGNN‑HTR, a spatio-temporal graph neural network framework that integrates multi-source data for regional health risk forecasting. Key features:
-- Hybrid graph construction (geographic adjacency + economic similarity)
-- Graph convolutional networks for spatial modeling
-- Gated recurrent units for temporal dynamics
-- Multi-head attention for adaptive feature fusion
+**Key features:**
+- Hybrid graph construction (geographic adjacency + economic similarity based on cosine similarity > 80th percentile)
+- Spatial modeling with 2-layer GCN
+- Temporal modeling with GRU
+- Multi-head attention (4 heads) for adaptive feature fusion
 - GNNExplainer-based interpretability
+- Full reproducibility: complete code, preprocessed data, and pre-trained weights
 
-## 🚀 Quick Start
+## Dataset Information
+- **Source:** Hunan Provincial Health Commission & Hunan Provincial Bureau of Statistics
+- **Processed dataset DOI:** https://doi.org/10.5281/zenodo.19217481
+- **Spatial units:** 14 prefecture-level cities in Hunan Province, China (Changsha, Zhuzhou, Xiangtan, Yueyang, Changde, Hengyang, Chenzhou, Yiyang, Loudi, Yongzhou, Shaoyang, Huaihua, Xiangxi, Zhangjiajie)
+- **Temporal coverage:** 2011–2023 (13 years, annual data)
+- **Target variable:** Hand trauma incidence rate (per 100,000 population)
+- **Features (9 total):** Resident population, population density, road network density, manufacturing/construction employee ratio, secondary industry GDP share, GDP per capita, physician density (per 1,000 population), college education proportion
+- **Data split (chronological):** Training (2011–2019), Validation (2020–2021), Testing (2022–2023)
+- **Preprocessing:** Linear interpolation for missing education data; min-max scaling to [0,1]
+
+## Code Information
+- Main training script: `src/train.py`
+- Model definition: `src/model.py`
+- Graph construction: `src/graph_builder.py`
+- Interpretability (GNNExplainer): `scripts/run_gnnexplainer.py`
+- Evaluation metrics: `src/utils.py`
+- Configuration files: `configs/default.yaml`
+- Visualization notebooks: `notebooks/`
+
+## Usage Instructions
 
 ### Prerequisites
 - Python 3.9+
-- PyTorch 2.0+
+- PyTorch 1.13+
 - PyTorch Geometric 2.3+
+- NVIDIA GPU (recommended; tested on Tesla T4 with 16GB memory)
 
 ### Installation
 ```bash
@@ -28,16 +47,11 @@ git clone https://github.com/CIAM-Lab/stgnn-hand-injury.git
 cd stgnn-hand-injury
 pip install -r requirements.txt
 Data Preparation
-The raw data is available from the Hunan Provincial Health Commission (subject to data use agreements). The preprocessed dataset used in our experiments can be downloaded from: [Zenodo link - to be added after DOI creation]
+Download the processed dataset from Zenodo (DOI: 10.5281/zenodo.19217481) and place files in the data/ directory.
 
-Place the data in the following structure:
-data/
-├── hand_trauma_2011_2023.csv
-└── city_features.csv
-Running Experiments
-Train the model:
+Training
 python src/train.py --config configs/default.yaml
-Reproduce paper results:
+Reproducing Paper Results
 # Table 2: Baseline comparison
 python scripts/run_baselines.py
 
@@ -49,45 +63,43 @@ python scripts/run_sensitivity.py
 
 # Interpretability analysis
 python scripts/run_gnnexplainer.py
-Results
-The model achieves the following performance on the test set (2022-2023):
-Metric	Value
-MAE	0.365
-RMSE	0.608
-R²	0.851
-Key findings:
+Requirements
+Create requirements.txt with:
+torch==1.13.0
+torch-geometric==2.3.0
+numpy==1.23.5
+pandas==1.5.3
+scikit-learn==1.2.2
+matplotlib==3.6.3
+jupyter==1.0.0
+tqdm==4.65.0
+pyyaml==6.0
+Methodology
+Graph construction: Hybrid adjacency matrix A = A^geo ∨ A^eco, where A^geo is geographic adjacency and A^eco is economic similarity based on cosine similarity (threshold: 80th percentile)
 
-Manufacturing employment ratio and physician density are the most influential predictors
+Spatial modeling: Two-layer Graph Convolutional Network (GCN) with ReLU activation
 
-Spatial dependencies extend beyond geographic adjacency to economic similarity
+Temporal modeling: GRU processing sequence of spatial embeddings (T=5 time steps)
 
-The Chang-Zhu-Tan urban agglomeration shows persistent high risk
-Project Structure
-stgnn-hand-injury/
-├── src/               # Source code
-│   ├── model.py       # STGNN‑HTR model definition
-│   ├── train.py       # Training script
-│   └── utils.py       # Utility functions
-├── scripts/           # Experiment scripts
-├── configs/           # Configuration files
-├── notebooks/         # Jupyter notebooks for visualization
-├── data/              # Data directory (not included in repo)
-├── requirements.txt   # Python dependencies
-└── README.md          # This file
-License
-This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
+Adaptive fusion: Multi-head self-attention (4 heads) over GRU outputs
+
+Output: Fully connected layer predicting next-year incidence (MSE loss with L2 regularization)
+
 Citation
-If you use this code in your research, please cite:
-@article{ye2026stgnn,
-  title={STGNN‑HTR: An Open-Source Spatio-Temporal Graph Neural Network Framework for Hand Trauma Risk Prediction},
-  author={Ye, Chen and Qin, Xiaoqun},
+If you use this code or data, please cite:
+@article{chen2026stgnn,
+  title={STGNN‑HTR: A reproducible spatio-temporal graph neural network framework for multi-source hand trauma risk prediction},
+  author={Chen, Ye and Qin, Xiaoqun and Chen, Shouping},
   journal={PeerJ Computer Science},
-  year={2026},
-  note={Under Review}
+  year={2026}
 }
+License
+MIT License - see LICENSE file for details.
+
 Contact
 Chen Ye: 295256318@qq.com
 
-Xiaoqun Qin: 1094426728@qq.com (Corresponding author)
+Xiaoqun Qin (Corresponding author): 1094426728@qq.com
+
 Acknowledgments
-This work was supported by the Provincial Health Research Program under Grant No. 25C1230. We thank the Hunan Provincial Health Commission and the Hunan Provincial Bureau of Statistics for providing the data.
+Supported by Provincial Health Research Program Grant No. 25C1230. We thank the Hunan Provincial Health Commission and Bureau of Statistics for providing the data.
